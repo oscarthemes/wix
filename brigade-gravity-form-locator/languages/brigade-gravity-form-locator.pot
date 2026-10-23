@@ -1,0 +1,1207 @@
+# Copyright (C) 2026 Brigade Themes
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Brigade Gravity Form Locator 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-23T16:45:11+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: brigade-gravity-form-locator\n"
+
+#. Plugin Name of the plugin
+#: brigade-gravity-form-locator.php:3
+#: includes/class-admin.php:46
+msgid "Brigade Gravity Form Locator"
+msgstr ""
+
+#. Description of the plugin
+#: brigade-gravity-form-locator.php:4
+msgid "Scans your site and shows where every Gravity Forms form is used: pages, posts, templates, synced patterns, widgets, theme files and page builder layouts."
+msgstr ""
+
+#. Author of the plugin
+#: brigade-gravity-form-locator.php:8
+msgid "Brigade Themes"
+msgstr ""
+
+#: admin/views/dashboard.php:36
+#: admin/views/settings.php:28
+#: includes/class-admin.php:47
+msgid "Brigade GF Locator"
+msgstr ""
+
+#: admin/views/dashboard.php:37
+msgid "Where your forms are used"
+msgstr ""
+
+#: admin/views/dashboard.php:38
+msgid "Every Gravity Forms form found in your pages, posts, templates, synced patterns, widgets, theme files and page builder layouts."
+msgstr ""
+
+#: admin/views/dashboard.php:45
+msgid "Gravity Forms is not active."
+msgstr ""
+
+#: admin/views/dashboard.php:46
+msgid "Scans still find form IDs in your content, but form names cannot be shown and unused forms cannot be listed. Activate Gravity Forms for a complete scan."
+msgstr ""
+
+#: admin/views/dashboard.php:56
+msgid "A scan was interrupted before it finished. Resume it, or start over. The results below are from the last scan that completed."
+msgstr ""
+
+#: admin/views/dashboard.php:62
+msgid "Scan"
+msgstr ""
+
+#. translators: 1: date and time, 2: manual or scheduled.
+#: admin/views/dashboard.php:68
+#, php-format
+msgid "Last successful scan: %1$s (%2$s)."
+msgstr ""
+
+#: admin/views/dashboard.php:70
+msgid "scheduled"
+msgstr ""
+
+#: admin/views/dashboard.php:70
+msgid "manual"
+msgstr ""
+
+#: admin/views/dashboard.php:73
+msgid "This site has not been scanned yet."
+msgstr ""
+
+#: admin/views/dashboard.php:80
+msgid "Resume scan"
+msgstr ""
+
+#: admin/views/dashboard.php:82
+msgid "Scan website"
+msgstr ""
+
+#: admin/views/dashboard.php:84
+msgid "Rescan all"
+msgstr ""
+
+#: admin/views/dashboard.php:85
+msgid "Refresh results"
+msgstr ""
+
+#: admin/views/dashboard.php:87
+msgid "Export CSV"
+msgstr ""
+
+#: admin/views/dashboard.php:89
+msgid "Stop scan"
+msgstr ""
+
+#: admin/views/dashboard.php:92
+msgid "Scan progress"
+msgstr ""
+
+#: admin/views/dashboard.php:99
+msgid "Summary"
+msgstr ""
+
+#: admin/views/dashboard.php:102
+msgid "Registered forms"
+msgstr ""
+
+#: admin/views/dashboard.php:106
+msgid "Forms detected in use"
+msgstr ""
+
+#: admin/views/dashboard.php:122
+#: admin/views/dashboard.php:174
+#: admin/views/dashboard.php:188
+#: includes/admin/class-forms-table.php:274
+msgid "No detected usage"
+msgstr ""
+
+#: admin/views/dashboard.php:126
+msgid "Distinct usage locations"
+msgstr ""
+
+#: admin/views/dashboard.php:129
+#: includes/class-admin.php:254
+msgid "Never"
+msgstr ""
+
+#: admin/views/dashboard.php:130
+msgid "Last successful scan"
+msgstr ""
+
+#. translators: 1: posts, 2: widgets, 3: saved templates, 4: theme files, 5: skipped items, 6: unresolved references.
+#: admin/views/dashboard.php:139
+#, php-format
+msgid "Scanned %1$s posts, pages and templates, %2$s widgets, %3$s saved builder templates and %4$s theme files. %5$s items skipped, %6$s unresolved references."
+msgstr ""
+
+#. translators: %s: number of forms.
+#: admin/views/dashboard.php:151
+#, php-format
+msgid "%s form has only possible references."
+msgid_plural "%s forms have only possible references."
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/views/dashboard.php:159
+msgid "Result views"
+msgstr ""
+
+#: admin/views/dashboard.php:160
+msgid "Usage locations"
+msgstr ""
+
+#: admin/views/dashboard.php:161
+msgid "By form"
+msgstr ""
+
+#: admin/views/dashboard.php:182
+msgid "Usage"
+msgstr ""
+
+#: admin/views/dashboard.php:185
+msgid "All forms"
+msgstr ""
+
+#: admin/views/dashboard.php:186
+msgid "Detected in use"
+msgstr ""
+
+#: admin/views/dashboard.php:187
+#: includes/admin/class-forms-table.php:278
+msgid "Possible references only"
+msgstr ""
+
+#: admin/views/dashboard.php:189
+msgid "Referenced but not found"
+msgstr ""
+
+#: admin/views/dashboard.php:191
+#: includes/admin/class-usage-table.php:162
+msgid "Filter"
+msgstr ""
+
+#: admin/views/dashboard.php:193
+msgid "Search forms"
+msgstr ""
+
+#. translators: %d: form ID.
+#: admin/views/dashboard.php:200
+#, php-format
+msgid "Showing form #%d only."
+msgstr ""
+
+#: admin/views/dashboard.php:202
+msgid "Show all forms"
+msgstr ""
+
+#: admin/views/dashboard.php:205
+msgid "Search forms, pages or URLs"
+msgstr ""
+
+#. translators: %s: number of notes.
+#: admin/views/dashboard.php:216
+#, php-format
+msgid "Unresolved references and skipped items (%s)"
+msgstr ""
+
+#: admin/views/dashboard.php:219
+msgid "These references could not be matched to a form statically, for example a shortcode whose ID comes from a variable. They are not counted as usages."
+msgstr ""
+
+#: admin/views/dashboard.php:223
+msgid "Skipped"
+msgstr ""
+
+#: admin/views/dashboard.php:223
+msgid "Unresolved"
+msgstr ""
+
+#: admin/views/dashboard.php:232
+msgid "Detection is static: the plugin reads stored content, builder data and theme files without rendering pages or running code. Forms output by other plugins' PHP, JavaScript or remote services cannot be detected. \"Possible\" references are rendered form markup found in content, which may be stale."
+msgstr ""
+
+#: admin/views/settings.php:29
+#: includes/class-admin.php:56
+msgid "Settings"
+msgstr ""
+
+#: admin/views/settings.php:37
+msgid "All scan results and history were deleted."
+msgstr ""
+
+#: admin/views/settings.php:39
+msgid "Nothing was deleted. Tick the confirmation box to reset scan data."
+msgstr ""
+
+#: admin/views/settings.php:46
+msgid "Scheduled scanning"
+msgstr ""
+
+#: admin/views/settings.php:49
+msgid "Schedule"
+msgstr ""
+
+#: admin/views/settings.php:53
+msgid "Scan automatically"
+msgstr ""
+
+#: admin/views/settings.php:56
+msgid "Frequency"
+msgstr ""
+
+#: admin/views/settings.php:58
+msgid "Daily"
+msgstr ""
+
+#: admin/views/settings.php:59
+msgid "Weekly"
+msgstr ""
+
+#: admin/views/settings.php:62
+msgid "When unticked, scans run only when you click Scan website. Scheduled scans use WP-Cron, which runs when someone visits the site; on low-traffic sites set up a real server cron job for reliable timing."
+msgstr ""
+
+#. translators: %s: date and time.
+#: admin/views/settings.php:68
+#, php-format
+msgid "Next scheduled scan: %s."
+msgstr ""
+
+#: admin/views/settings.php:78
+msgid "What to scan"
+msgstr ""
+
+#: admin/views/settings.php:81
+#: admin/views/settings.php:84
+msgid "Post types"
+msgstr ""
+
+#: admin/views/settings.php:92
+msgid "Post types registered later are included automatically."
+msgstr ""
+
+#: admin/views/settings.php:96
+#: admin/views/settings.php:99
+msgid "Post statuses"
+msgstr ""
+
+#: admin/views/settings.php:107
+msgid "Trashed content and auto-drafts are never scanned."
+msgstr ""
+
+#: admin/views/settings.php:111
+msgid "Reusable content and templates"
+msgstr ""
+
+#: admin/views/settings.php:115
+msgid "Synced patterns, site editor templates and parts, and builder templates (Elementor, Divi, WPBakery, Beaver Builder, Bricks, Oxygen)"
+msgstr ""
+
+#: admin/views/settings.php:119
+msgid "Widgets in widget areas"
+msgstr ""
+
+#: admin/views/settings.php:123
+msgid "Active theme and parent theme files (read only, never executed)"
+msgstr ""
+
+#: admin/views/settings.php:127
+msgid "Report possible references (rendered form markup pasted into content)"
+msgstr ""
+
+#: admin/views/settings.php:132
+msgid "Batch size"
+msgstr ""
+
+#: admin/views/settings.php:135
+msgid "Posts read per database query. Lower it if scans run out of memory."
+msgstr ""
+
+#: admin/views/settings.php:142
+msgid "Detectors"
+msgstr ""
+
+#: admin/views/settings.php:143
+msgid "Each detector reads one kind of stored data. Builder data is scanned even when the builder plugin is inactive, because layouts stay in the database. Disabling a builder detector skips that builder's pages entirely instead of reporting them under another builder."
+msgstr ""
+
+#: admin/views/settings.php:147
+msgid "Enabled"
+msgstr ""
+
+#: admin/views/settings.php:148
+msgid "Detector"
+msgstr ""
+
+#: admin/views/settings.php:149
+msgid "Support"
+msgstr ""
+
+#: admin/views/settings.php:150
+msgid "Plugin or theme"
+msgstr ""
+
+#: admin/views/settings.php:151
+msgid "What it reads"
+msgstr ""
+
+#: admin/views/settings.php:164
+msgid "Supported"
+msgstr ""
+
+#: admin/views/settings.php:166
+msgid "Partial"
+msgstr ""
+
+#: admin/views/settings.php:172
+msgid "Built in"
+msgstr ""
+
+#: admin/views/settings.php:174
+#: includes/admin/class-forms-table.php:262
+#: includes/class-location-links.php:155
+msgid "Active"
+msgstr ""
+
+#: admin/views/settings.php:176
+msgid "Not active (stored data is still scanned)"
+msgstr ""
+
+#: admin/views/settings.php:188
+msgid "History"
+msgstr ""
+
+#: admin/views/settings.php:191
+msgid "Keep scan summaries"
+msgstr ""
+
+#: admin/views/settings.php:194
+msgid "Number of past scan summaries (counts only) to keep. Detailed results are kept for the latest successful scan only. 0 keeps no history."
+msgstr ""
+
+#: admin/views/settings.php:205
+msgid "Recent scans"
+msgstr ""
+
+#: admin/views/settings.php:209
+msgid "Finished"
+msgstr ""
+
+#: admin/views/settings.php:210
+msgid "Trigger"
+msgstr ""
+
+#: admin/views/settings.php:211
+msgid "Forms"
+msgstr ""
+
+#: admin/views/settings.php:212
+msgid "In use"
+msgstr ""
+
+#: admin/views/settings.php:213
+msgid "Locations"
+msgstr ""
+
+#: admin/views/settings.php:214
+msgid "Duration"
+msgstr ""
+
+#: admin/views/settings.php:221
+#: includes/class-location-links.php:151
+msgid "Scheduled"
+msgstr ""
+
+#: admin/views/settings.php:221
+msgid "Manual"
+msgstr ""
+
+#: admin/views/settings.php:234
+#: admin/views/settings.php:243
+msgid "Reset scan data"
+msgstr ""
+
+#: admin/views/settings.php:235
+msgid "Deletes this plugin's scan results, scan progress and history. Settings are kept. Gravity Forms, entries, posts, templates and builder layouts are never changed."
+msgstr ""
+
+#: admin/views/settings.php:241
+msgid "I understand that all scan results and history will be deleted."
+msgstr ""
+
+#: includes/admin/class-forms-table.php:72
+#: includes/admin/class-usage-table.php:61
+#: includes/class-export.php:78
+msgid "Form name"
+msgstr ""
+
+#: includes/admin/class-forms-table.php:73
+#: includes/admin/class-usage-table.php:62
+#: includes/class-export.php:79
+msgid "Form ID"
+msgstr ""
+
+#: includes/admin/class-forms-table.php:74
+msgid "Form status"
+msgstr ""
+
+#: includes/admin/class-forms-table.php:75
+#: includes/admin/class-usage-table.php:63
+msgid "Usage count"
+msgstr ""
+
+#: includes/admin/class-forms-table.php:76
+msgid "Detected locations"
+msgstr ""
+
+#. translators: %d: form ID.
+#: includes/admin/class-forms-table.php:127
+#, php-format
+msgid "Form #%d"
+msgstr ""
+
+#: includes/admin/class-forms-table.php:205
+msgid "No results yet. Run a scan to list your forms and where they are used."
+msgstr ""
+
+#: includes/admin/class-forms-table.php:207
+msgid "Gravity Forms was not active during the last scan, so registered forms could not be listed."
+msgstr ""
+
+#: includes/admin/class-forms-table.php:209
+msgid "No forms match this view."
+msgstr ""
+
+#: includes/admin/class-forms-table.php:221
+msgid "Referenced but not found in Gravity Forms"
+msgstr ""
+
+#: includes/admin/class-forms-table.php:223
+msgid "(untitled form)"
+msgstr ""
+
+#: includes/admin/class-forms-table.php:233
+msgid "Edit form"
+msgstr ""
+
+#: includes/admin/class-forms-table.php:256
+msgid "Not found"
+msgstr ""
+
+#: includes/admin/class-forms-table.php:259
+msgid "In trash"
+msgstr ""
+
+#: includes/admin/class-forms-table.php:263
+#: includes/class-location-links.php:156
+msgid "Inactive"
+msgstr ""
+
+#. translators: %s: number of usage records.
+#: includes/admin/class-forms-table.php:299
+#, php-format
+msgid "Show %s record"
+msgid_plural "Show %s records"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-forms-table.php:312
+#: includes/admin/class-usage-table.php:269
+msgid "Edit"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:64
+msgid "Used on"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:65
+msgid "Page link"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:66
+msgid "Edit link"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:67
+#: includes/class-export.php:85
+msgid "Builder"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:68
+msgid "Implementation"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:69
+msgid "Status"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:70
+msgid "Last scanned"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:128
+msgid "No usage locations match these filters."
+msgstr ""
+
+#: includes/admin/class-usage-table.php:130
+msgid "No results yet. Run a scan to find where your forms are used."
+msgstr ""
+
+#: includes/admin/class-usage-table.php:157
+msgid "All builders"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:158
+msgid "All methods"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:159
+msgid "All statuses"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:160
+msgid "All location types"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:161
+msgid "Any confidence"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:204
+msgid "Show only this form"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:239
+msgid "Deleted since the last scan"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:253
+#: includes/admin/class-usage-table.php:267
+msgid "Not available"
+msgstr ""
+
+#: includes/admin/class-usage-table.php:255
+msgid "(opens in a new tab)"
+msgstr ""
+
+#. translators: %s: number of identical matches.
+#: includes/admin/class-usage-table.php:299
+#, php-format
+msgid "%s identical matches"
+msgstr ""
+
+#: includes/class-admin.php:55
+#: includes/class-admin.php:68
+msgid "Form usage"
+msgstr ""
+
+#: includes/class-admin.php:56
+msgid "Locator settings"
+msgstr ""
+
+#: includes/class-admin.php:117
+msgid "Starting scan…"
+msgstr ""
+
+#: includes/class-admin.php:118
+msgid "Scan complete. Loading the new results…"
+msgstr ""
+
+#: includes/class-admin.php:119
+msgid "The scan failed. Your previous results were kept."
+msgstr ""
+
+#: includes/class-admin.php:120
+msgid "The server did not respond. The scan can be resumed; your previous results were kept."
+msgstr ""
+
+#: includes/class-admin.php:121
+msgid "Discard any scan in progress and scan the whole site again?"
+msgstr ""
+
+#: includes/class-admin.php:122
+msgid "Stop the scan? Partial results are discarded and your previous results stay visible."
+msgstr ""
+
+#: includes/class-admin.php:123
+msgid "Delete all scan results and history? Settings, Gravity Forms and your content are not affected."
+msgstr ""
+
+#. translators: 1: items done, 2: total items.
+#: includes/class-admin.php:125
+#, php-format
+msgid "%1$s of %2$s items"
+msgstr ""
+
+#: includes/class-admin.php:126
+msgid "Scan stopped."
+msgstr ""
+
+#: includes/class-admin.php:180
+#: includes/class-admin.php:203
+msgid "You are not allowed to view this page."
+msgstr ""
+
+#: includes/class-admin.php:219
+msgid "You are not allowed to reset this data."
+msgstr ""
+
+#: includes/class-ajax.php:39
+msgid "You are not allowed to run scans."
+msgstr ""
+
+#: includes/class-ajax.php:42
+msgid "Your session has expired. Reload the page and try again."
+msgstr ""
+
+#: includes/class-export.php:42
+msgid "You are not allowed to export this data."
+msgstr ""
+
+#: includes/class-export.php:80
+msgid "Object title"
+msgstr ""
+
+#: includes/class-export.php:81
+msgid "Object type"
+msgstr ""
+
+#: includes/class-export.php:82
+msgid "Object status"
+msgstr ""
+
+#: includes/class-export.php:83
+msgid "Page or template URL"
+msgstr ""
+
+#: includes/class-export.php:84
+msgid "Edit URL"
+msgstr ""
+
+#: includes/class-export.php:86
+msgid "Implementation method"
+msgstr ""
+
+#: includes/class-export.php:87
+msgid "Detection source"
+msgstr ""
+
+#: includes/class-export.php:88
+msgid "Confidence level"
+msgstr ""
+
+#: includes/class-export.php:89
+msgid "Occurrences"
+msgstr ""
+
+#: includes/class-export.php:90
+msgid "Last scanned (UTC)"
+msgstr ""
+
+#: includes/class-location-links.php:27
+msgid "View"
+msgstr ""
+
+#: includes/class-location-links.php:90
+msgid "Preview"
+msgstr ""
+
+#: includes/class-location-links.php:122
+msgid "Synced pattern"
+msgstr ""
+
+#: includes/class-location-links.php:124
+msgid "Widget"
+msgstr ""
+
+#: includes/class-location-links.php:126
+msgid "Theme file"
+msgstr ""
+
+#: includes/class-location-links.php:128
+msgid "Saved builder template"
+msgstr ""
+
+#. translators: 1: template post type label, 2: template kind such as header.
+#: includes/class-location-links.php:136
+#, php-format
+msgid "%1$s (%2$s)"
+msgstr ""
+
+#: includes/class-location-links.php:150
+msgid "Published"
+msgstr ""
+
+#: includes/class-location-links.php:152
+msgid "Draft"
+msgstr ""
+
+#: includes/class-location-links.php:153
+msgid "Pending review"
+msgstr ""
+
+#: includes/class-location-links.php:154
+msgid "Private"
+msgstr ""
+
+#: includes/class-location-links.php:168
+msgid "Posts, pages and custom post types"
+msgstr ""
+
+#: includes/class-location-links.php:169
+msgid "Templates"
+msgstr ""
+
+#: includes/class-location-links.php:170
+msgid "Synced patterns"
+msgstr ""
+
+#: includes/class-location-links.php:171
+msgid "Widgets"
+msgstr ""
+
+#: includes/class-location-links.php:172
+msgid "Theme files"
+msgstr ""
+
+#: includes/class-location-links.php:173
+msgid "Saved builder templates"
+msgstr ""
+
+#. translators: %d: form ID.
+#: includes/class-location-links.php:188
+#, php-format
+msgid "Form #%d (not found in Gravity Forms)"
+msgstr ""
+
+#. translators: %s: where the shortcode was found.
+#: includes/class-parser.php:138
+#, php-format
+msgid "Gravity Forms shortcode without a form ID (%s)."
+msgstr ""
+
+#. translators: 1: the form reference, 2: where the shortcode was found.
+#: includes/class-parser.php:144
+#, php-format
+msgid "Gravity Forms shortcode with a dynamic form reference \"%1$s\" (%2$s)."
+msgstr ""
+
+#. translators: 1: where the shortcode was found, 2: shortcode action attribute.
+#: includes/class-parser.php:150
+#, php-format
+msgid "%1$s, action \"%2$s\""
+msgstr ""
+
+#: includes/class-parser.php:209
+msgid "Gravity Forms block with no form selected."
+msgstr ""
+
+#: includes/class-parser.php:211
+#: includes/class-usage.php:103
+msgid "Gravity Forms block"
+msgstr ""
+
+#: includes/class-parser.php:214
+msgid "Shortcode block"
+msgstr ""
+
+#: includes/class-parser.php:218
+#: includes/class-parser.php:219
+msgid "Classic content"
+msgstr ""
+
+#. translators: %s: block name, e.g. core/paragraph.
+#: includes/class-parser.php:223
+#, php-format
+msgid "Shortcode inside %s block"
+msgstr ""
+
+#. translators: %s: block name.
+#: includes/class-parser.php:257
+#, php-format
+msgid "Shortcode in %s block settings"
+msgstr ""
+
+#. translators: %s: block name.
+#: includes/class-parser.php:264
+#, php-format
+msgid "Third-party block %s"
+msgstr ""
+
+#: includes/class-scanner.php:100
+msgid "A scan is already in progress."
+msgstr ""
+
+#: includes/class-scanner.php:162
+msgid "Another scan step is still running."
+msgstr ""
+
+#: includes/class-scanner.php:169
+msgid "No scan is in progress."
+msgstr ""
+
+#. translators: %s: error message.
+#: includes/class-scanner.php:184
+#, php-format
+msgid "The scan stopped because of an error: %s. Your previous results were kept."
+msgstr ""
+
+#: includes/class-scanner.php:236
+msgid "Scanning posts, pages and templates…"
+msgstr ""
+
+#: includes/class-scanner.php:237
+msgid "Scanning widgets…"
+msgstr ""
+
+#: includes/class-scanner.php:238
+msgid "Scanning saved builder templates…"
+msgstr ""
+
+#: includes/class-scanner.php:239
+msgid "Scanning theme files…"
+msgstr ""
+
+#: includes/class-scanner.php:240
+msgid "Saving results…"
+msgstr ""
+
+#. translators: %d: post ID.
+#: includes/class-scanner.php:396
+#, php-format
+msgid "(no title) #%d"
+msgstr ""
+
+#: includes/class-scanner.php:479
+msgid "Inactive widgets"
+msgstr ""
+
+#: includes/class-scanner.php:482
+#: includes/class-usage.php:104
+#: includes/detectors/class-widget-detector.php:71
+msgid "Gravity Forms widget"
+msgstr ""
+
+#: includes/class-scanner.php:483
+msgid "Text widget"
+msgstr ""
+
+#: includes/class-scanner.php:484
+msgid "Custom HTML widget"
+msgstr ""
+
+#: includes/class-scanner.php:485
+msgid "Block widget"
+msgstr ""
+
+#. translators: 1: widget name, 2: widget area name.
+#: includes/class-scanner.php:495
+#, php-format
+msgid "%1$s in %2$s"
+msgstr ""
+
+#. translators: %s: template name.
+#: includes/class-scanner.php:542
+#, php-format
+msgid "WPBakery saved template \"%s\""
+msgstr ""
+
+#. translators: %d: maximum number of files.
+#: includes/class-scanner.php:615
+#, php-format
+msgid "Theme file limit reached; only the first %d files were scanned."
+msgstr ""
+
+#: includes/class-scanner.php:658
+msgid "The file could not be read."
+msgstr ""
+
+#: includes/class-scanner.php:662
+msgid "The file is larger than 1 MB and was skipped."
+msgstr ""
+
+#. translators: 1: detector name, 2: error message.
+#: includes/class-scanner.php:733
+#, php-format
+msgid "%1$s detector error: %2$s"
+msgstr ""
+
+#. translators: 1: form reference, 2: where it was found.
+#: includes/class-scanner.php:761
+#, php-format
+msgid "Form reference \"%1$s\" does not match any form ID or title (%2$s)."
+msgstr ""
+
+#: includes/class-settings.php:185
+msgid "At least one post status is required, so Published was selected."
+msgstr ""
+
+#: includes/class-usage.php:102
+msgid "Shortcode"
+msgstr ""
+
+#: includes/class-usage.php:105
+msgid "Builder element"
+msgstr ""
+
+#: includes/class-usage.php:106
+msgid "PHP template function"
+msgstr ""
+
+#: includes/class-usage.php:107
+msgid "Setting reference"
+msgstr ""
+
+#: includes/class-usage.php:108
+msgid "Rendered form markup"
+msgstr ""
+
+#: includes/class-usage.php:119
+msgid "Confirmed"
+msgstr ""
+
+#: includes/class-usage.php:120
+msgid "Likely"
+msgstr ""
+
+#: includes/class-usage.php:121
+msgid "Possible"
+msgstr ""
+
+#: includes/detectors/class-classic-detector.php:32
+msgid "Classic Editor shortcodes"
+msgstr ""
+
+#: includes/detectors/class-classic-detector.php:39
+msgid "Gravity Forms shortcodes in post content that no page builder and no block markup claims, including content of other builders that store plain shortcodes."
+msgstr ""
+
+#: includes/detectors/class-classic-detector.php:78
+msgid "Shortcode in post content"
+msgstr ""
+
+#: includes/detectors/class-classic-detector.php:82
+msgid "Post content"
+msgstr ""
+
+#: includes/detectors/class-divi-detector.php:43
+msgid "Divi Builder"
+msgstr ""
+
+#: includes/detectors/class-divi-detector.php:50
+msgid "Gravity Forms shortcodes inside Divi modules (Code, Text and others) and third-party Divi modules whose name mentions Gravity Forms, in pages, Divi Library layouts and Theme Builder headers, bodies and footers. Divi 5 layouts are read through their block markup."
+msgstr ""
+
+#. translators: %s: Divi module shortcode tag.
+#: includes/detectors/class-divi-detector.php:138
+#, php-format
+msgid "Divi module %s"
+msgstr ""
+
+#. translators: %s: Divi module shortcode tag.
+#: includes/detectors/class-divi-detector.php:141
+#, php-format
+msgid "Divi module \"%s\" looks like a Gravity Forms module but no form ID attribute was recognised."
+msgstr ""
+
+#. translators: %s: Divi module shortcode tag, e.g. et_pb_code.
+#: includes/detectors/class-divi-detector.php:150
+#, php-format
+msgid "Shortcode in Divi %s module"
+msgstr ""
+
+#: includes/detectors/class-divi-detector.php:151
+msgid "Shortcode in Divi layout"
+msgstr ""
+
+#: includes/detectors/class-divi-detector.php:159
+msgid "Divi layout"
+msgstr ""
+
+#: includes/detectors/class-elementor-detector.php:47
+msgid "Elementor"
+msgstr ""
+
+#: includes/detectors/class-elementor-detector.php:54
+msgid "Shortcode, Text Editor and HTML widgets, shortcodes inside any widget setting, and third-party Gravity Forms widgets (form ID settings) in pages, Theme Builder templates, popups and global widgets. Pages edited with Elementor are attributed to Elementor only."
+msgstr ""
+
+#: includes/detectors/class-elementor-detector.php:120
+msgid "Elementor data could not be decoded."
+msgstr ""
+
+#: includes/detectors/class-elementor-detector.php:176
+msgid "Elementor Shortcode widget"
+msgstr ""
+
+#. translators: %s: Elementor widget type.
+#: includes/detectors/class-elementor-detector.php:179
+#, php-format
+msgid "Shortcode in Elementor %s widget"
+msgstr ""
+
+#. translators: %s: Elementor widget type.
+#: includes/detectors/class-elementor-detector.php:182
+#, php-format
+msgid "Shortcode in Elementor %s widget settings"
+msgstr ""
+
+#. translators: %s: Elementor widget type.
+#: includes/detectors/class-elementor-detector.php:199
+#, php-format
+msgid "Elementor %s widget"
+msgstr ""
+
+#. translators: %s: Elementor widget type.
+#: includes/detectors/class-elementor-detector.php:202
+#, php-format
+msgid "Elementor widget \"%s\" looks like a Gravity Forms widget but no form ID setting was recognised."
+msgstr ""
+
+#: includes/detectors/class-gutenberg-detector.php:33
+msgid "Block editor (Gutenberg)"
+msgstr ""
+
+#: includes/detectors/class-gutenberg-detector.php:40
+msgid "The Gravity Forms block, Shortcode blocks, shortcodes inside any block, synced patterns (reusable blocks), and site editor templates and template parts saved in the database."
+msgstr ""
+
+#: includes/detectors/class-metadata-detector.php:73
+msgid "Post meta (other builders and custom fields)"
+msgstr ""
+
+#: includes/detectors/class-metadata-detector.php:80
+msgid "Shortcodes and Gravity Forms elements stored in post meta: Beaver Builder, Bricks, Oxygen, SiteOrigin, Themify and Cornerstone layouts, and custom fields such as ACF. Builder-specific elements are recognised only when their name mentions Gravity Forms."
+msgstr ""
+
+#. translators: %s: meta key.
+#: includes/detectors/class-metadata-detector.php:148
+#, php-format
+msgid "Shortcode in meta field \"%s\""
+msgstr ""
+
+#. translators: 1: element type, 2: meta key.
+#: includes/detectors/class-metadata-detector.php:249
+#, php-format
+msgid "Element %1$s in meta field \"%2$s\""
+msgstr ""
+
+#: includes/detectors/class-theme-file-detector.php:57
+msgid "Theme template files"
+msgstr ""
+
+#: includes/detectors/class-theme-file-detector.php:64
+msgid "PHP and HTML files of the active theme and its parent: gravity_form() and GFForms::get_form() calls with literal IDs, shortcodes in PHP strings, block markup in templates, parts and patterns. Files are read, never executed; calls with variables are listed as unresolved."
+msgstr ""
+
+#: includes/detectors/class-theme-file-detector.php:101
+msgid "The PHP tokenizer extension is not available, so this PHP file was only searched for shortcodes."
+msgstr ""
+
+#: includes/detectors/class-theme-file-detector.php:102
+msgid "Shortcode in PHP template"
+msgstr ""
+
+#. translators: 1: PHP function name, 2: line number.
+#: includes/detectors/class-theme-file-detector.php:154
+#, php-format
+msgid "%1$s() call, line %2$d"
+msgstr ""
+
+#. translators: 1: PHP function name, 2: line number.
+#: includes/detectors/class-theme-file-detector.php:158
+#, php-format
+msgid "%1$s() called with a dynamic form reference on line %2$d."
+msgstr ""
+
+#. translators: 1: original source description, 2: line number.
+#: includes/detectors/class-theme-file-detector.php:184
+#, php-format
+msgid "%1$s, line %2$d"
+msgstr ""
+
+#. translators: %d: line number.
+#: includes/detectors/class-theme-file-detector.php:191
+#, php-format
+msgid "Shortcode in PHP string (e.g. do_shortcode), line %d"
+msgstr ""
+
+#. translators: %d: line number.
+#: includes/detectors/class-theme-file-detector.php:193
+#, php-format
+msgid "Shortcode in template HTML, line %d"
+msgstr ""
+
+#: includes/detectors/class-widget-detector.php:36
+msgid "Widgets and sidebars"
+msgstr ""
+
+#: includes/detectors/class-widget-detector.php:43
+msgid "The Gravity Forms widget, block widgets, Text and Custom HTML widgets, and shortcodes in any widget assigned to a widget area (including inactive widgets)."
+msgstr ""
+
+#: includes/detectors/class-widget-detector.php:68
+msgid "Gravity Forms widget with no form selected."
+msgstr ""
+
+#. translators: %s: widget type, e.g. text.
+#: includes/detectors/class-widget-detector.php:79
+#, php-format
+msgid "Shortcode in %s widget"
+msgstr ""
+
+#. translators: %s: widget type.
+#: includes/detectors/class-widget-detector.php:92
+#, php-format
+msgid "Third-party %s widget"
+msgstr ""
+
+#: includes/detectors/class-wpbakery-detector.php:48
+msgid "WPBakery Page Builder"
+msgstr ""
+
+#: includes/detectors/class-wpbakery-detector.php:55
+msgid "The Gravity Form element, shortcodes in Text Block and other elements, base64-encoded Raw HTML elements and third-party elements whose name mentions Gravity Forms, in pages, Templatera templates, grid items and saved templates."
+msgstr ""
+
+#. translators: %s: WPBakery element shortcode tag.
+#: includes/detectors/class-wpbakery-detector.php:121
+#, php-format
+msgid "WPBakery element %s"
+msgstr ""
+
+#: includes/detectors/class-wpbakery-detector.php:140
+msgid "WPBakery layout"
+msgstr ""
+
+#: includes/detectors/class-wpbakery-detector.php:151
+msgid "WPBakery Gravity Form element"
+msgstr ""
+
+#: includes/detectors/class-wpbakery-detector.php:154
+msgid "Shortcode in WPBakery Text Block"
+msgstr ""
+
+#. translators: %s: WPBakery element shortcode tag.
+#: includes/detectors/class-wpbakery-detector.php:158
+#, php-format
+msgid "Shortcode in WPBakery %s element"
+msgstr ""
+
+#: includes/detectors/class-wpbakery-detector.php:160
+msgid "Shortcode in WPBakery layout"
+msgstr ""
+
+#: includes/detectors/class-wpbakery-detector.php:178
+msgid "WPBakery Raw HTML element"
+msgstr ""

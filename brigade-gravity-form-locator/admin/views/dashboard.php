@@ -105,7 +105,19 @@ $bgfl_stat        = function ( $key ) use ( $bgfl_stats ) {
 			<span class="bgfl-stat__value"><?php echo esc_html( $bgfl_stat( 'forms_used' ) ); ?></span>
 			<span class="bgfl-stat__label"><?php esc_html_e( 'Forms detected in use', 'brigade-gravity-form-locator' ); ?></span>
 		</div>
-		<a class="bgfl-stat bgfl-stat--link" href="<?php echo esc_url( add_query_arg( array( 'view' => 'forms', 'usage' => 'none' ), $bgfl_base_url ) ); ?>">
+		<a class="bgfl-stat bgfl-stat--link" href="
+		<?php
+		echo esc_url(
+			add_query_arg(
+				array(
+					'view'  => 'forms',
+					'usage' => 'none',
+				),
+				$bgfl_base_url
+			)
+		);
+		?>
+		">
 			<span class="bgfl-stat__value"><?php echo esc_html( $bgfl_stat( 'forms_unused' ) ); ?></span>
 			<span class="bgfl-stat__label"><?php esc_html_e( 'No detected usage', 'brigade-gravity-form-locator' ); ?></span>
 		</a>
@@ -147,7 +159,19 @@ $bgfl_stat        = function ( $key ) use ( $bgfl_stats ) {
 	<nav class="bgfl-tabs" aria-label="<?php esc_attr_e( 'Result views', 'brigade-gravity-form-locator' ); ?>">
 		<a class="bgfl-tab <?php echo 'usages' === $view ? 'is-active' : ''; ?>" href="<?php echo esc_url( $bgfl_base_url ); ?>" <?php echo 'usages' === $view ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'Usage locations', 'brigade-gravity-form-locator' ); ?></a>
 		<a class="bgfl-tab <?php echo 'forms' === $view && 'none' !== $bgfl_usage ? 'is-active' : ''; ?>" href="<?php echo esc_url( add_query_arg( 'view', 'forms', $bgfl_base_url ) ); ?>" <?php echo 'forms' === $view && 'none' !== $bgfl_usage ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'By form', 'brigade-gravity-form-locator' ); ?></a>
-		<a class="bgfl-tab <?php echo 'forms' === $view && 'none' === $bgfl_usage ? 'is-active' : ''; ?>" href="<?php echo esc_url( add_query_arg( array( 'view' => 'forms', 'usage' => 'none' ), $bgfl_base_url ) ); ?>" <?php echo 'forms' === $view && 'none' === $bgfl_usage ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'No detected usage', 'brigade-gravity-form-locator' ); ?></a>
+		<a class="bgfl-tab <?php echo 'forms' === $view && 'none' === $bgfl_usage ? 'is-active' : ''; ?>" href="
+		<?php
+		echo esc_url(
+			add_query_arg(
+				array(
+					'view'  => 'forms',
+					'usage' => 'none',
+				),
+				$bgfl_base_url
+			)
+		);
+		?>
+		" <?php echo 'forms' === $view && 'none' === $bgfl_usage ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'No detected usage', 'brigade-gravity-form-locator' ); ?></a>
 	</nav>
 
 	<div class="bgfl-card bgfl-card--table">

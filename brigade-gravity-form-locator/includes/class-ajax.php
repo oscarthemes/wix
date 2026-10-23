@@ -49,6 +49,7 @@ class Ajax {
 	public static function start() {
 		self::authorize();
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified in authorize().
 		$mode  = isset( $_POST['mode'] ) ? sanitize_key( wp_unslash( $_POST['mode'] ) ) : 'scan';
 		$state = Scanner::state();
 

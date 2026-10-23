@@ -43,8 +43,8 @@ class Scanner {
 	/**
 	 * Theme files: maximum number of files and bytes per file.
 	 */
-	const MAX_FILES     = 3000;
-	const MAX_FILE_SIZE = 1048576;
+	const MAX_FILES      = 3000;
+	const MAX_FILE_SIZE  = 1048576;
 	const FILES_PER_UNIT = 40;
 
 	/**
@@ -169,10 +169,10 @@ class Scanner {
 				return $state ? $state : new \WP_Error( 'bgfl_no_scan', __( 'No scan is in progress.', 'brigade-gravity-form-locator' ) );
 			}
 
-			$deadline = microtime( true ) + max( 1.0, (float) $budget );
+			$deadline = microtime( true ) + max( 0.0, (float) $budget );
 
 			do {
-				$state = self::run_unit( $state );
+				$state               = self::run_unit( $state );
 				$state['updated_at'] = time();
 				self::save( $state );
 			} while ( self::STATUS_RUNNING === $state['status'] && microtime( true ) < $deadline && ! self::memory_exhausted() );
@@ -346,7 +346,7 @@ class Scanner {
 		$batch  = max( 5, (int) $settings['batch_size'] );
 		$params = array_merge( array( (int) $state['cursor'] ), $filter[1], array( $batch ) );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Placeholders generated in post_filter().
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Placeholders generated in post_filter().
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->posts} WHERE ID > %d AND {$filter[0]} ORDER BY ID ASC LIMIT %d", $params ) );
 
 		if ( empty( $rows ) ) {
@@ -383,7 +383,7 @@ class Scanner {
 	 * @param \WP_Post $post Post.
 	 * @return Scan_Item
 	 */
-	private static function post_item( \WP_Post $post ) {
+	public static function post_item( \WP_Post $post ) {
 		$item          = new Scan_Item();
 		$item->post    = $post;
 		$item->id      = (int) $post->ID;
@@ -478,7 +478,13 @@ class Scanner {
 			if ( 'wp_inactive_widgets' === $sidebar_id ) {
 				$sidebar_name = __( 'Inactive widgets', 'brigade-gravity-form-locator' );
 			}
-			$widget_name = isset( $wp_registered_widgets[ $widget_id ]['name'] ) ? $wp_registered_widgets[ $widget_id ]['name'] : $base;
+			$known       = array(
+				'gform_widget' => __( 'Gravity Forms widget', 'brigade-gravity-form-locator' ),
+				'text'         => __( 'Text widget', 'brigade-gravity-form-locator' ),
+				'custom_html'  => __( 'Custom HTML widget', 'brigade-gravity-form-locator' ),
+				'block'        => __( 'Block widget', 'brigade-gravity-form-locator' ),
+			);
+			$widget_name = isset( $wp_registered_widgets[ $widget_id ]['name'] ) ? $wp_registered_widgets[ $widget_id ]['name'] : ( isset( $known[ $base ] ) ? $known[ $base ] : $base );
 			$label       = is_array( $instance ) && ! empty( $instance['title'] ) && is_string( $instance['title'] ) ? $widget_name . ' "' . $instance['title'] . '"' : $widget_name;
 
 			$item          = new Scan_Item();
@@ -685,42 +691,50 @@ class Scanner {
 		}
 
 		$context = new Scan_Context( $state['settings'] );
-		$all     = Detector_Registry::all();
-		$enabled = Detector_Registry::enabled( $state['settings'] );
 		$rows    = array();
 		$keys    = array();
 
 		foreach ( $items as $item ) {
 			$keys[] = $item->key;
-
-			// Ownership is decided across all detectors, so disabling a builder detector
-			// skips that builder's content instead of misreporting it as Classic content.
-			foreach ( $all as $id => $detector ) {
-				if ( $detector->claims_content( $item ) ) {
-					$item->content_owner = $id;
-					break;
-				}
-			}
-
-			$usages = array();
-			foreach ( $enabled as $detector ) {
-				if ( ! $detector->supports( $item ) ) {
-					continue;
-				}
-				try {
-					$usages = array_merge( $usages, $detector->detect( $item, $context ) );
-				} catch ( \Throwable $e ) {
-					/* translators: 1: detector name, 2: error message. */
-					$context->skipped( $item, sprintf( __( '%1$s detector error: %2$s', 'brigade-gravity-form-locator' ), $detector->get_label(), $e->getMessage() ) );
-				}
-			}
-
-			$rows = array_merge( $rows, self::rows_for( $item, $usages, $state['forms'], $context ) );
+			$rows   = array_merge( $rows, self::rows_for( $item, self::detect_item( $item, $context ), $state['forms'], $context ) );
 		}
 
 		Results_Repository::replace_locations( (int) $state['scan_id'], $keys, $rows );
 
 		return self::merge_notes( $state, $context );
+	}
+
+	/**
+	 * Runs the enabled detectors on one item.
+	 *
+	 * @param Scan_Item    $item    Location.
+	 * @param Scan_Context $context Scan context (its settings decide which detectors run).
+	 * @return Usage[]
+	 */
+	public static function detect_item( Scan_Item $item, Scan_Context $context ) {
+		// Ownership is decided across all detectors, so disabling a builder detector
+		// skips that builder's content instead of misreporting it as Classic content.
+		foreach ( Detector_Registry::all() as $id => $detector ) {
+			if ( $detector->claims_content( $item ) ) {
+				$item->content_owner = $id;
+				break;
+			}
+		}
+
+		$usages = array();
+		foreach ( Detector_Registry::enabled( $context->settings ) as $detector ) {
+			if ( ! $detector->supports( $item ) ) {
+				continue;
+			}
+			try {
+				$usages = array_merge( $usages, $detector->detect( $item, $context ) );
+			} catch ( \Throwable $e ) {
+				/* translators: 1: detector name, 2: error message. */
+				$context->skipped( $item, sprintf( __( '%1$s detector error: %2$s', 'brigade-gravity-form-locator' ), $detector->get_label(), $e->getMessage() ) );
+			}
+		}
+
+		return $usages;
 	}
 
 	/**
@@ -856,7 +870,7 @@ class Scanner {
 	 */
 	private static function merge_notes( array $state, Scan_Context $context ) {
 		$state['counts']['skipped'] += $context->skipped;
-		$room = Scan_Context::MAX_NOTES - count( $state['notes'] );
+		$room                        = Scan_Context::MAX_NOTES - count( $state['notes'] );
 		if ( $room > 0 && $context->notes ) {
 			$state['notes'] = array_merge( $state['notes'], array_slice( $context->notes, 0, $room ) );
 		}

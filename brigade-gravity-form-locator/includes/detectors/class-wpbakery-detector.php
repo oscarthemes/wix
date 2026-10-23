@@ -90,7 +90,7 @@ class WPBakery_Detector extends Abstract_Detector {
 		if ( ! $item->is_post_like() ) {
 			return false;
 		}
-		if ( in_array( $item->subtype, array( 'templatera', 'vc_grid_item' ), true ) || 'true' === $item->meta( '_wpb_vc_js_status' ) ) {
+		if ( in_array( $item->post_type(), array( 'templatera', 'vc_grid_item' ), true ) || 'true' === $item->meta( '_wpb_vc_js_status' ) ) {
 			return true;
 		}
 		return false !== strpos( $item->content, '[vc_row' ) || false !== strpos( $item->content, '[vc_section' );
@@ -143,19 +143,19 @@ class WPBakery_Detector extends Abstract_Detector {
 	/**
 	 * Describes a shortcode's position.
 	 *
-	 * @param string $parent Closest WPBakery ancestor.
+	 * @param string $ancestor Closest WPBakery ancestor.
 	 * @return string
 	 */
-	private function source_for( $parent ) {
-		if ( in_array( $parent, self::COLUMNS, true ) ) {
+	private function source_for( $ancestor ) {
+		if ( in_array( $ancestor, self::COLUMNS, true ) ) {
 			return __( 'WPBakery Gravity Form element', 'brigade-gravity-form-locator' );
 		}
-		if ( 'vc_column_text' === $parent ) {
+		if ( 'vc_column_text' === $ancestor ) {
 			return __( 'Shortcode in WPBakery Text Block', 'brigade-gravity-form-locator' );
 		}
-		if ( '' !== $parent ) {
+		if ( '' !== $ancestor ) {
 			/* translators: %s: WPBakery element shortcode tag. */
-			return sprintf( __( 'Shortcode in WPBakery %s element', 'brigade-gravity-form-locator' ), $parent );
+			return sprintf( __( 'Shortcode in WPBakery %s element', 'brigade-gravity-form-locator' ), $ancestor );
 		}
 		return __( 'Shortcode in WPBakery layout', 'brigade-gravity-form-locator' );
 	}

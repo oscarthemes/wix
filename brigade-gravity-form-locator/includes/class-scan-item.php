@@ -117,6 +117,15 @@ class Scan_Item {
 	}
 
 	/**
+	 * Post type for post-like items, otherwise an empty string.
+	 *
+	 * @return string
+	 */
+	public function post_type() {
+		return $this->post ? $this->post->post_type : '';
+	}
+
+	/**
 	 * Whether this item is backed by a post row.
 	 *
 	 * @return bool

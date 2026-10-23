@@ -75,6 +75,11 @@ class Location_Links {
 			return $links;
 		}
 
+		// Templates of an inactive builder have no registered post type and no editor.
+		if ( ! post_type_exists( $post->post_type ) ) {
+			return $links;
+		}
+
 		$can_edit = current_user_can( 'edit_post', $post->ID );
 
 		if ( Scan_Item::TYPE_POST === $row['object_type'] && is_post_type_viewable( $post->post_type ) ) {
@@ -124,7 +129,7 @@ class Location_Links {
 		}
 
 		$object = get_post_type_object( $parts[0] );
-		$label  = $object ? $object->labels->singular_name : $parts[0];
+		$label  = $object ? $object->labels->singular_name : self::unregistered_type_label( $parts[0] );
 
 		if ( Scan_Item::TYPE_TEMPLATE === $row['object_type'] && isset( $parts[1] ) && '' !== $parts[1] ) {
 			/* translators: 1: template post type label, 2: template kind such as header. */
@@ -132,6 +137,29 @@ class Location_Links {
 		}
 
 		return $label;
+	}
+
+	/**
+	 * Labels for builder post types whose plugin is inactive (not registered).
+	 *
+	 * @param string $post_type Post type.
+	 * @return string
+	 */
+	private static function unregistered_type_label( $post_type ) {
+		$labels = array(
+			'elementor_library'   => __( 'Elementor template', 'brigade-gravity-form-locator' ),
+			'et_pb_layout'        => __( 'Divi Library layout', 'brigade-gravity-form-locator' ),
+			'et_template'         => __( 'Divi Theme Builder template', 'brigade-gravity-form-locator' ),
+			'et_header_layout'    => __( 'Divi header layout', 'brigade-gravity-form-locator' ),
+			'et_body_layout'      => __( 'Divi body layout', 'brigade-gravity-form-locator' ),
+			'et_footer_layout'    => __( 'Divi footer layout', 'brigade-gravity-form-locator' ),
+			'templatera'          => __( 'WPBakery template', 'brigade-gravity-form-locator' ),
+			'vc_grid_item'        => __( 'WPBakery grid item', 'brigade-gravity-form-locator' ),
+			'fl-builder-template' => __( 'Beaver Builder template', 'brigade-gravity-form-locator' ),
+			'bricks_template'     => __( 'Bricks template', 'brigade-gravity-form-locator' ),
+			'ct_template'         => __( 'Oxygen template', 'brigade-gravity-form-locator' ),
+		);
+		return isset( $labels[ $post_type ] ) ? $labels[ $post_type ] : $post_type;
 	}
 
 	/**

@@ -70,8 +70,8 @@ class Results_Repository {
 
 		foreach ( array_chunk( $object_keys, 100 ) as $chunk ) {
 			$placeholders = implode( ',', array_fill( 0, count( $chunk ), '%s' ) );
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Custom table; placeholders built above.
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE scan_id = %d AND object_key IN ({$placeholders})", array_merge( array( $scan_id ), $chunk ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table; placeholders built above.
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE scan_id = %d AND object_key IN ({$placeholders})", array_merge( array( $scan_id ), $chunk ) ) );
 		}
 
 		foreach ( $rows as $row ) {
@@ -104,7 +104,7 @@ class Results_Repository {
 	public static function discard( $scan_id ) {
 		global $wpdb;
 
-		if ( (int) $scan_id === self::active_scan_id() ) {
+		if ( self::active_scan_id() === (int) $scan_id ) {
 			return;
 		}
 
@@ -158,7 +158,7 @@ class Results_Repository {
 		$orderby = isset( self::SORTABLE[ $args['orderby'] ] ) ? self::SORTABLE[ $args['orderby'] ] : 'form_name';
 		$order   = 'desc' === strtolower( (string) $args['order'] ) ? 'DESC' : 'ASC';
 
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table; $where uses placeholders, ORDER BY is whitelisted.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Custom table; $where uses placeholders, ORDER BY is whitelisted.
 		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE {$where}", $params ) );
 
 		$sql = "SELECT * FROM {$table} WHERE {$where} ORDER BY {$orderby} {$order}, form_id ASC, object_title ASC, id ASC";

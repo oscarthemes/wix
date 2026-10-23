@@ -44,20 +44,20 @@ class Settings {
 	 * @var array<string,string> Post type => builder label.
 	 */
 	const TEMPLATE_POST_TYPES = array(
-		'wp_block'             => 'Gutenberg',
-		'wp_template'          => 'Gutenberg',
-		'wp_template_part'     => 'Gutenberg',
-		'elementor_library'    => 'Elementor',
-		'et_pb_layout'         => 'Divi',
-		'et_template'          => 'Divi',
-		'et_header_layout'     => 'Divi',
-		'et_body_layout'       => 'Divi',
-		'et_footer_layout'     => 'Divi',
-		'templatera'           => 'WPBakery',
-		'vc_grid_item'         => 'WPBakery',
-		'fl-builder-template'  => 'Beaver Builder',
-		'bricks_template'      => 'Bricks',
-		'ct_template'          => 'Oxygen',
+		'wp_block'            => 'Gutenberg',
+		'wp_template'         => 'Gutenberg',
+		'wp_template_part'    => 'Gutenberg',
+		'elementor_library'   => 'Elementor',
+		'et_pb_layout'        => 'Divi',
+		'et_template'         => 'Divi',
+		'et_header_layout'    => 'Divi',
+		'et_body_layout'      => 'Divi',
+		'et_footer_layout'    => 'Divi',
+		'templatera'          => 'WPBakery',
+		'vc_grid_item'        => 'WPBakery',
+		'fl-builder-template' => 'Beaver Builder',
+		'bricks_template'     => 'Bricks',
+		'ct_template'         => 'Oxygen',
 	);
 
 	/**
@@ -175,7 +175,7 @@ class Settings {
 			: $defaults['schedule_frequency'];
 
 		// The form posts the post types to include; store the complement so new post types are scanned by default.
-		$included = isset( $input['post_types'] ) ? array_map( 'sanitize_key', (array) $input['post_types'] ) : array();
+		$included                     = isset( $input['post_types'] ) ? array_map( 'sanitize_key', (array) $input['post_types'] ) : array();
 		$clean['excluded_post_types'] = array_values( array_diff( array_keys( self::content_post_types() ), $included ) );
 
 		$statuses          = isset( $input['statuses'] ) ? array_map( 'sanitize_key', (array) $input['statuses'] ) : array();

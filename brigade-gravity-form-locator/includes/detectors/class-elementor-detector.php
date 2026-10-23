@@ -94,7 +94,7 @@ class Elementor_Detector extends Abstract_Detector {
 	 * @return bool
 	 */
 	private function is_built_with_elementor( Scan_Item $item ) {
-		if ( 'elementor_library' === $item->subtype ) {
+		if ( 'elementor_library' === $item->post_type() ) {
 			return true;
 		}
 		return 'builder' === $item->meta( '_elementor_edit_mode' );

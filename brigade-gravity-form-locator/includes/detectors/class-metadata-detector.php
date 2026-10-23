@@ -27,17 +27,17 @@ class Metadata_Detector extends Abstract_Detector {
 	 * @var array<string,string> Meta key => builder label.
 	 */
 	const BUILDER_KEYS = array(
-		'_fl_builder_data'              => 'Beaver Builder',
-		'_bricks_page_content_2'        => 'Bricks',
-		'_bricks_page_header_2'         => 'Bricks',
-		'_bricks_page_footer_2'         => 'Bricks',
-		'ct_builder_shortcodes'         => 'Oxygen',
-		'_ct_builder_shortcodes'        => 'Oxygen',
-		'ct_builder_json'               => 'Oxygen',
-		'_ct_builder_json'              => 'Oxygen',
-		'panels_data'                   => 'SiteOrigin',
+		'_fl_builder_data'               => 'Beaver Builder',
+		'_bricks_page_content_2'         => 'Bricks',
+		'_bricks_page_header_2'          => 'Bricks',
+		'_bricks_page_footer_2'          => 'Bricks',
+		'ct_builder_shortcodes'          => 'Oxygen',
+		'_ct_builder_shortcodes'         => 'Oxygen',
+		'ct_builder_json'                => 'Oxygen',
+		'_ct_builder_json'               => 'Oxygen',
+		'panels_data'                    => 'SiteOrigin',
 		'_themify_builder_settings_json' => 'Themify',
-		'_cornerstone_data'             => 'Cornerstone',
+		'_cornerstone_data'              => 'Cornerstone',
 	);
 
 	/**
@@ -200,7 +200,7 @@ class Metadata_Detector extends Abstract_Detector {
 	private function decode( $raw ) {
 		if ( is_serialized( $raw ) ) {
 			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- Only plain stdClass objects are allowed, which is safer than maybe_unserialize().
-			$value = @unserialize( trim( $raw ), array( 'allowed_classes' => array( 'stdClass' ) ) );
+			$value = unserialize( trim( $raw ), array( 'allowed_classes' => array( 'stdClass' ) ) );
 			return false === $value ? $raw : $value;
 		}
 

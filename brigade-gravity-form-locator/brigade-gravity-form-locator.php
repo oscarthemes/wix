@@ -1,13 +1,11 @@
 <?php
 /**
  * Plugin Name:       Brigade Gravity Form Locator
- * Plugin URI:        https://wordpress.org/plugins/brigade-gravity-form-locator/
  * Description:       Scans your site and shows where every Gravity Forms form is used: pages, posts, templates, synced patterns, widgets, theme files and page builder layouts.
  * Version:           1.0.0
- * Requires at least: 6.0
+ * Requires at least: 6.2
  * Requires PHP:      7.4
  * Author:            Brigade Themes
- * Author URI:        https://brigadethemes.com/
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       brigade-gravity-form-locator

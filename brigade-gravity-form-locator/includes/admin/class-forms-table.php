@@ -98,6 +98,7 @@ class Forms_Table extends \WP_List_Table {
 	/**
 	 * Builds all form rows (registered and unregistered).
 	 *
+	 * @param array|null $summary Last scan summary.
 	 * @return array[]
 	 */
 	public static function all_rows( $summary ) {
@@ -220,6 +221,7 @@ class Forms_Table extends \WP_List_Table {
 			return '<span class="bgfl-missing">' . esc_html( $item['form_name'] ) . '</span><span class="bgfl-sub">' . esc_html__( 'Referenced but not found in Gravity Forms', 'brigade-gravity-form-locator' ) . '</span>';
 		}
 		$html = '<strong>' . esc_html( '' !== $item['form_name'] ? $item['form_name'] : __( '(untitled form)', 'brigade-gravity-form-locator' ) ) . '</strong>';
+		// phpcs:ignore WordPress.WP.Capabilities.Unknown -- Capability registered by Gravity Forms.
 		if ( current_user_can( 'gravityforms_edit_forms' ) || current_user_can( 'manage_options' ) ) {
 			$url   = add_query_arg(
 				array(
@@ -294,14 +296,14 @@ class Forms_Table extends \WP_List_Table {
 		$levels  = Usage::confidence_labels();
 
 		/* translators: %s: number of usage records. */
-		$html  = '<details class="bgfl-details"><summary>' . esc_html( sprintf( _n( 'Show %s record', 'Show %s records', count( $rows ), 'brigade-gravity-form-locator' ), number_format_i18n( count( $rows ) ) ) ) . '</summary><ul>';
+		$html = '<details class="bgfl-details"><summary>' . esc_html( sprintf( _n( 'Show %s record', 'Show %s records', count( $rows ), 'brigade-gravity-form-locator' ), number_format_i18n( count( $rows ) ) ) ) . '</summary><ul>';
 
 		foreach ( $rows as $row ) {
-			$links  = Location_Links::for_row( $row );
-			$html  .= '<li><span class="bgfl-location">' . esc_html( $row['object_title'] ) . '</span> ';
-			$html  .= '<span class="bgfl-tag">' . esc_html( $row['builder'] ) . '</span> ';
-			$html  .= '<span class="bgfl-confidence bgfl-confidence--' . esc_attr( $row['confidence'] ) . '">' . esc_html( isset( $levels[ $row['confidence'] ] ) ? $levels[ $row['confidence'] ] : $row['confidence'] ) . '</span>';
-			$html  .= '<span class="bgfl-sub">' . esc_html( Location_Links::type_label( $row ) . ' · ' . ( isset( $methods[ $row['implementation'] ] ) ? $methods[ $row['implementation'] ] : $row['implementation'] ) . ' · ' . $row['source'] ) . '</span>';
+			$links   = Location_Links::for_row( $row );
+			$html   .= '<li><span class="bgfl-location">' . esc_html( $row['object_title'] ) . '</span> ';
+			$html   .= '<span class="bgfl-tag">' . esc_html( $row['builder'] ) . '</span> ';
+			$html   .= '<span class="bgfl-confidence bgfl-confidence--' . esc_attr( $row['confidence'] ) . '">' . esc_html( isset( $levels[ $row['confidence'] ] ) ? $levels[ $row['confidence'] ] : $row['confidence'] ) . '</span>';
+			$html   .= '<span class="bgfl-sub">' . esc_html( Location_Links::type_label( $row ) . ' · ' . ( isset( $methods[ $row['implementation'] ] ) ? $methods[ $row['implementation'] ] : $row['implementation'] ) . ' · ' . $row['source'] ) . '</span>';
 			$actions = array();
 			if ( '' !== $links['view'] ) {
 				$actions[] = '<a href="' . esc_url( $links['view'] ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $links['view_label'] ) . '</a>';

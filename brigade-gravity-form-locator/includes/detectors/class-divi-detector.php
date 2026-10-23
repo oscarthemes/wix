@@ -89,7 +89,7 @@ class Divi_Detector extends Abstract_Detector {
 		if ( ! $item->is_post_like() ) {
 			return false;
 		}
-		if ( in_array( $item->subtype, self::POST_TYPES, true ) || 'on' === $item->meta( '_et_pb_use_builder' ) ) {
+		if ( in_array( $item->post_type(), self::POST_TYPES, true ) || 'on' === $item->meta( '_et_pb_use_builder' ) ) {
 			return true;
 		}
 		return false !== strpos( $item->content, '[et_pb_' ) || false !== strpos( $item->content, '<!-- wp:divi/' );

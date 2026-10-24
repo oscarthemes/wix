@@ -49,6 +49,7 @@ class Usage_Table extends \WP_List_Table {
 				'singular' => 'bgfl-usage',
 				'plural'   => 'bgfl-usages',
 				'ajax'     => false,
+				'screen'   => Admin_Controller::screen_id(),
 			)
 		);
 	}

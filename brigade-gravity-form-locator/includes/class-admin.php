@@ -80,7 +80,6 @@ class Admin {
 			array(
 				'type'              => 'array',
 				'sanitize_callback' => array( Settings::class, 'sanitize' ),
-				'default'           => Settings::defaults(),
 				'show_in_rest'      => false,
 			)
 		);
@@ -116,6 +115,7 @@ class Admin {
 				'i18n'    => array(
 					'starting'      => __( 'Starting scan…', 'brigade-gravity-form-locator' ),
 					'complete'      => __( 'Scan complete. Loading the new results…', 'brigade-gravity-form-locator' ),
+					'unsaved'       => __( 'You have unsaved changes.', 'brigade-gravity-form-locator' ),
 					'failed'        => __( 'The scan failed. Your previous results were kept.', 'brigade-gravity-form-locator' ),
 					'network'       => __( 'The server did not respond. The scan can be resumed; your previous results were kept.', 'brigade-gravity-form-locator' ),
 					'confirmRescan' => __( 'Discard any scan in progress and scan the whole site again?', 'brigade-gravity-form-locator' ),
@@ -123,7 +123,12 @@ class Admin {
 					'confirmReset'  => __( 'Delete all scan results and history? Settings, Gravity Forms and your content are not affected.', 'brigade-gravity-form-locator' ),
 					/* translators: 1: items done, 2: total items. */
 					'progress'      => __( '%1$s of %2$s items', 'brigade-gravity-form-locator' ),
-					'cancelled'     => __( 'Scan stopped.', 'brigade-gravity-form-locator' ),
+					'cancelled'     => __( 'Scan stopped. Your previous results are still shown.', 'brigade-gravity-form-locator' ),
+					'refreshing'    => __( 'Loading results…', 'brigade-gravity-form-locator' ),
+					'refreshed'     => __( 'Results updated.', 'brigade-gravity-form-locator' ),
+					'loadFailed'    => __( 'The results could not be loaded. Try again.', 'brigade-gravity-form-locator' ),
+					'scanLabel'     => __( 'Scan website', 'brigade-gravity-form-locator' ),
+					'scanComplete'  => __( 'Scan complete. Results updated.', 'brigade-gravity-form-locator' ),
 				),
 			)
 		);
@@ -180,8 +185,19 @@ class Admin {
 			wp_die( esc_html__( 'You are not allowed to view this page.', 'brigade-gravity-form-locator' ) );
 		}
 
+		$state                                    = Scanner::state();
+		list( $summary, $view, $filters, $table ) = self::results_context();
+
+		include BGFL_PATH . 'admin/views/dashboard.php';
+	}
+
+	/**
+	 * Builds everything the results region needs from the current request.
+	 *
+	 * @return array{0:array|null,1:string,2:array,3:\WP_List_Table}
+	 */
+	private static function results_context() {
 		$summary = History::last();
-		$state   = Scanner::state();
 		$view    = self::current_view();
 		$filters = self::request_filters();
 
@@ -192,7 +208,92 @@ class Admin {
 		}
 		$table->prepare_items();
 
-		include BGFL_PATH . 'admin/views/dashboard.php';
+		return array( $summary, $view, $filters, $table );
+	}
+
+	/**
+	 * Renders the results region for a dashboard URL query, for the AJAX endpoint.
+	 *
+	 * WP_List_Table reads its state (page number, sorting) from the request and builds
+	 * its links from REQUEST_URI, so the dashboard's query is applied to the request
+	 * before rendering. Only the dashboard's own query arguments are accepted.
+	 *
+	 * @param string $query Query string of the dashboard URL.
+	 * @return array{html:string,lastScan:string,exportUrl:string,url:string}
+	 */
+	public static function render_results( $query ) {
+		$allowed = array( 'view', 'usage', 's', 'builder', 'implementation', 'status', 'object_type', 'confidence', 'form_id', 'missing', 'orderby', 'order', 'paged' );
+		parse_str( (string) $query, $parsed );
+
+		$args = array( 'page' => self::SLUG );
+		foreach ( $allowed as $key ) {
+			if ( isset( $parsed[ $key ] ) && is_scalar( $parsed[ $key ] ) && '' !== (string) $parsed[ $key ] ) {
+				$args[ $key ] = sanitize_text_field( (string) $parsed[ $key ] );
+			}
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification -- Display-only state; the AJAX caller verified the nonce.
+		$_GET     = wp_slash( $args ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$_REQUEST = $_GET; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		// phpcs:enable
+
+		$url                    = add_query_arg( $args, admin_url( 'admin.php' ) );
+		$_SERVER['REQUEST_URI'] = wp_parse_url( $url, PHP_URL_PATH ) . '?' . wp_parse_url( $url, PHP_URL_QUERY );
+
+		list( $summary, $view, $filters, $table ) = self::results_context();
+
+		ob_start();
+		require BGFL_PATH . 'admin/views/partials/results.php';
+		$html = (string) ob_get_clean();
+
+		return array(
+			'html'      => $html,
+			'lastScan'  => self::last_scan_text( $summary ),
+			'exportUrl' => self::export_url( $summary, $view, $filters ),
+			'url'       => $url,
+		);
+	}
+
+	/**
+	 * CSV export URL for the current view, or '' before the first scan.
+	 *
+	 * @param array|null $summary Last scan summary.
+	 * @param string     $view    usages|forms.
+	 * @param array      $filters Filters.
+	 * @return string
+	 */
+	public static function export_url( $summary, $view, array $filters ) {
+		if ( ! $summary ) {
+			return '';
+		}
+		return Export::url( 'usages' === $view ? $filters : array() );
+	}
+
+	/**
+	 * Sentence describing the last successful scan.
+	 *
+	 * @param array|null $summary Last scan summary.
+	 * @return string
+	 */
+	public static function last_scan_text( $summary ) {
+		if ( ! $summary ) {
+			return __( 'This site has not been scanned yet.', 'brigade-gravity-form-locator' );
+		}
+		return sprintf(
+			/* translators: 1: date and time, 2: manual or scheduled. */
+			__( 'Last successful scan: %1$s (%2$s).', 'brigade-gravity-form-locator' ),
+			self::format_time( $summary['finished_at'] ),
+			'scheduled' === $summary['trigger'] ? __( 'scheduled', 'brigade-gravity-form-locator' ) : __( 'manual', 'brigade-gravity-form-locator' )
+		);
+	}
+
+	/**
+	 * Screen ID of the dashboard, used by the list tables when rendered over AJAX.
+	 *
+	 * @return string
+	 */
+	public static function screen_id() {
+		return 'toplevel_page_' . self::SLUG;
 	}
 
 	/**

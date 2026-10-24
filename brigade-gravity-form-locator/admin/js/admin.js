@@ -1,5 +1,9 @@
 /**
- * Brigade Gravity Form Locator dashboard: runs batched scans over admin-ajax.
+ * Brigade Gravity Form Locator admin screens.
+ *
+ * Dashboard: runs batched scans over admin-ajax and loads the results region in place
+ * (refresh, scan completion, pagination, sorting, tabs, search and filters) without
+ * reloading the page. Settings: unsaved-changes bar and dependent controls.
  */
 ( function () {
 	'use strict';
@@ -12,9 +16,10 @@
 	var i18n = config.i18n;
 	var running = false;
 	var stopped = false;
+	var loadToken = 0;
 
-	function $( selector ) {
-		return document.querySelector( selector );
+	function $( selector, root ) {
+		return ( root || document ).querySelector( selector );
 	}
 
 	function request( action, data ) {
@@ -42,6 +47,12 @@
 		} );
 	}
 
+	/* ------------------------------------------------------------------ */
+	/* Dashboard                                                          */
+	/* ------------------------------------------------------------------ */
+
+	var results = $( '[data-bgfl-results]' );
+
 	function setMessage( text, isError ) {
 		var message = $( '[data-bgfl-message]' );
 		if ( message ) {
@@ -52,17 +63,22 @@
 
 	function setProgress( progress ) {
 		var wrap = $( '[data-bgfl-progress]' );
-		var bar = wrap && wrap.querySelector( '[role="progressbar"]' );
-		var fill = wrap && wrap.querySelector( '.bgfl-progress__fill' );
 		if ( ! wrap ) {
 			return;
 		}
 		wrap.hidden = false;
-		bar.setAttribute( 'aria-valuenow', String( progress.percent || 0 ) );
-		fill.style.width = ( progress.percent || 0 ) + '%';
+		wrap.querySelector( '[role="progressbar"]' ).setAttribute( 'aria-valuenow', String( progress.percent || 0 ) );
+		wrap.querySelector( '.bgfl-progress__fill' ).style.width = ( progress.percent || 0 ) + '%';
 
 		var counts = i18n.progress.replace( '%1$s', progress.done || 0 ).replace( '%2$s', progress.total || 0 );
 		setMessage( ( progress.label || '' ) + ' ' + counts + ' (' + ( progress.percent || 0 ) + '%)' );
+	}
+
+	function hideProgress() {
+		var wrap = $( '[data-bgfl-progress]' );
+		if ( wrap ) {
+			wrap.hidden = true;
+		}
 	}
 
 	function setBusy( busy ) {
@@ -76,13 +92,81 @@
 		} );
 	}
 
+	function resetPrimary() {
+		var primary = $( '[data-bgfl-primary]' );
+		if ( primary ) {
+			primary.setAttribute( 'data-bgfl-action', 'scan' );
+			primary.textContent = i18n.scanLabel;
+		}
+	}
+
+	function clearStaleAlerts() {
+		document.querySelectorAll( '[data-bgfl-stale-alert]' ).forEach( function ( alert ) {
+			alert.remove();
+		} );
+	}
+
+	/**
+	 * Loads the results region for a dashboard URL.
+	 *
+	 * @param {string}  href    Dashboard URL whose query decides view, filters and page.
+	 * @param {boolean} push    Add a browser history entry.
+	 * @return {Promise}
+	 */
+	function loadResults( href, push ) {
+		if ( ! results ) {
+			return Promise.resolve();
+		}
+
+		var url = new URL( href, window.location.href );
+		var token = ++loadToken;
+
+		results.setAttribute( 'aria-busy', 'true' );
+		results.classList.add( 'is-loading' );
+
+		return request( 'bgfl_results', { query: url.search } ).then( function ( data ) {
+			if ( token !== loadToken ) {
+				return;
+			}
+			results.innerHTML = data.html;
+
+			var lastScan = $( '[data-bgfl-last-scan]' );
+			if ( lastScan ) {
+				lastScan.textContent = data.lastScan;
+			}
+
+			var exportLink = $( '[data-bgfl-export]' );
+			if ( exportLink ) {
+				exportLink.hidden = ! data.exportUrl;
+				if ( data.exportUrl ) {
+					exportLink.href = data.exportUrl;
+				}
+			}
+
+			if ( push ) {
+				window.history.pushState( { bgfl: true }, '', data.url );
+			}
+		} ).finally( function () {
+			if ( token === loadToken ) {
+				results.setAttribute( 'aria-busy', 'false' );
+				results.classList.remove( 'is-loading' );
+			}
+		} );
+	}
+
 	function finish() {
 		setMessage( i18n.complete );
-		window.setTimeout( function () {
-			var url = new URL( window.location.href );
-			url.searchParams.delete( 'paged' );
-			window.location.assign( url.toString() );
-		}, 600 );
+		loadResults( window.location.href, false ).then( function () {
+			setBusy( false );
+			hideProgress();
+			resetPrimary();
+			setMessage( i18n.scanComplete );
+		} ).catch( function () {
+			setBusy( false );
+			hideProgress();
+			resetPrimary();
+			setMessage( i18n.loadFailed, true );
+		} );
 	}
 
 	function fail( error ) {
@@ -124,11 +208,7 @@
 		stopped = false;
 		setBusy( true );
 		setMessage( i18n.starting );
-
-		var notice = $( '[data-bgfl-interrupted]' );
-		if ( notice ) {
-			notice.hidden = true;
-		}
+		clearStaleAlerts();
 
 		request( 'bgfl_scan_start', { mode: mode } ).then( function ( progress ) {
 			setProgress( progress );
@@ -147,40 +227,157 @@
 		stopped = true;
 		request( 'bgfl_scan_cancel' ).then( function () {
 			setBusy( false );
-			var wrap = $( '[data-bgfl-progress]' );
-			if ( wrap ) {
-				wrap.hidden = true;
-			}
+			hideProgress();
+			resetPrimary();
+			clearStaleAlerts();
 			setMessage( i18n.cancelled );
-			window.location.reload();
 		} ).catch( fail );
 	}
 
-	document.addEventListener( 'click', function ( event ) {
-		var button = event.target.closest( '[data-bgfl-action]' );
-		if ( ! button ) {
+	function refresh() {
+		if ( running ) {
 			return;
 		}
-		event.preventDefault();
-		var action = button.getAttribute( 'data-bgfl-action' );
-		if ( 'cancel' === action ) {
-			cancel();
-		} else {
-			start( action );
+		setMessage( i18n.refreshing );
+		loadResults( window.location.href, false ).then( function () {
+			setMessage( i18n.refreshed );
+		} ).catch( function () {
+			setMessage( i18n.loadFailed, true );
+		} );
+	}
+
+	/**
+	 * Whether a link points to this dashboard and can be loaded in place.
+	 *
+	 * @param {HTMLAnchorElement} link Link.
+	 * @return {boolean}
+	 */
+	function isDashboardLink( link ) {
+		if ( ! link.href || link.target || link.hasAttribute( 'download' ) ) {
+			return false;
 		}
-	} );
+		var url = new URL( link.href, window.location.href );
+		var here = new URL( window.location.href );
+		return url.origin === here.origin && url.pathname === here.pathname && url.searchParams.get( 'page' ) === here.searchParams.get( 'page' );
+	}
+
+	if ( results ) {
+		document.addEventListener( 'click', function ( event ) {
+			var button = event.target.closest( '[data-bgfl-action]' );
+			if ( button ) {
+				event.preventDefault();
+				var action = button.getAttribute( 'data-bgfl-action' );
+				if ( 'cancel' === action ) {
+					cancel();
+				} else if ( 'refresh' === action ) {
+					refresh();
+				} else {
+					start( action );
+				}
+				return;
+			}
+
+			// Pagination, sorting, view tabs and form links inside the results region.
+			var link = event.target.closest( 'a' );
+			if ( ! link || ! results.contains( link ) || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ) {
+				return;
+			}
+			if ( ! isDashboardLink( link ) ) {
+				return;
+			}
+			event.preventDefault();
+			loadResults( link.href, true ).catch( function () {
+				window.location.assign( link.href );
+			} );
+		} );
+
+		// Search box, filters and the page-number field submit the table form.
+		results.addEventListener( 'submit', function ( event ) {
+			var form = event.target.closest( '.bgfl-table-form' );
+			if ( ! form ) {
+				return;
+			}
+			event.preventDefault();
+
+			var params = new URLSearchParams();
+			new FormData( form ).forEach( function ( value, key ) {
+				if ( '' !== value && -1 === [ '_wpnonce', '_wp_http_referer', 'filter_action', 'action', 'action2' ].indexOf( key ) ) {
+					params.set( key, value );
+				}
+			} );
+
+			// A new search or filter starts at page 1; keep the page only when it was typed.
+			var active = document.activeElement;
+			if ( ! active || 'current-page-selector' !== active.id ) {
+				params.delete( 'paged' );
+			}
+
+			var url = new URL( window.location.href );
+			url.search = params.toString();
+			loadResults( url.toString(), true ).catch( function () {
+				window.location.assign( url.toString() );
+			} );
+		} );
+
+		window.addEventListener( 'popstate', function () {
+			loadResults( window.location.href, false ).catch( function () {
+				window.location.reload();
+			} );
+		} );
+
+		// Pick up a scan that is still running (for example after a page reload).
+		var progressWrap = $( '[data-bgfl-progress]' );
+		if ( progressWrap && ! progressWrap.hidden ) {
+			start( 'resume' );
+		}
+	}
+
+	/* ------------------------------------------------------------------ */
+	/* Settings                                                           */
+	/* ------------------------------------------------------------------ */
+
+	var settings = $( '[data-bgfl-settings]' );
+	if ( settings ) {
+		var savebar = $( '[data-bgfl-savebar]' );
+		var initial = new URLSearchParams( new FormData( settings ) ).toString();
+
+		var syncSchedule = function () {
+			var toggle = $( '[data-bgfl-schedule-toggle]', settings );
+			var group = $( '[data-bgfl-schedule-frequency]', settings );
+			// Dimmed rather than disabled, so the chosen frequency is still saved.
+			if ( toggle && group ) {
+				group.toggleAttribute( 'data-off', ! toggle.checked );
+			}
+		};
+
+		settings.addEventListener( 'change', function () {
+			syncSchedule();
+			var dirty = new URLSearchParams( new FormData( settings ) ).toString() !== initial;
+			if ( savebar ) {
+				savebar.classList.toggle( 'is-dirty', dirty );
+				var status = $( '[data-bgfl-savebar-status]', savebar );
+				if ( status ) {
+					status.textContent = dirty ? i18n.unsaved : '';
+				}
+			}
+		} );
+		syncSchedule();
+	}
 
 	var reset = $( '[data-bgfl-reset]' );
 	if ( reset ) {
+		var confirmBox = reset.querySelector( 'input[type="checkbox"]' );
+		var resetButton = reset.querySelector( 'button[type="submit"]' );
+		var syncReset = function () {
+			resetButton.disabled = ! confirmBox.checked;
+		};
+		confirmBox.addEventListener( 'change', syncReset );
+		syncReset();
+
 		reset.addEventListener( 'submit', function ( event ) {
 			if ( ! window.confirm( i18n.confirmReset ) ) {
 				event.preventDefault();
 			}
 		} );
-	}
-
-	// Pick up a scan that is still running (for example after a page reload).
-	if ( $( '[data-bgfl-progress]' ) && ! $( '[data-bgfl-progress]' ).hidden ) {
-		start( 'resume' );
 	}
 }() );

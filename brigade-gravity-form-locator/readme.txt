@@ -49,6 +49,7 @@ For every usage the dashboard shows the form name and ID, the number of distinct
 * Filter by builder, implementation method, status, location type and confidence
 * Sortable columns and pagination
 * CSV export of the current filters, protected against spreadsheet formula injection
+* Scans, Refresh, search, filters, sorting, tabs and pagination update the results in place, without reloading the page
 
 = Safe, resumable scanning =
 

@@ -49,6 +49,7 @@ class Forms_Table extends \WP_List_Table {
 				'singular' => 'bgfl-form',
 				'plural'   => 'bgfl-forms',
 				'ajax'     => false,
+				'screen'   => \Brigade\GravityFormLocator\Admin::screen_id(),
 			)
 		);
 	}

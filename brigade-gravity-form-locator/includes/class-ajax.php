@@ -29,6 +29,7 @@ class Ajax {
 		add_action( 'wp_ajax_bgfl_scan_step', array( __CLASS__, 'step' ) );
 		add_action( 'wp_ajax_bgfl_scan_status', array( __CLASS__, 'status' ) );
 		add_action( 'wp_ajax_bgfl_scan_cancel', array( __CLASS__, 'cancel' ) );
+		add_action( 'wp_ajax_bgfl_results', array( __CLASS__, 'results' ) );
 	}
 
 	/**
@@ -95,6 +96,16 @@ class Ajax {
 		self::authorize();
 		Scanner::cancel();
 		wp_send_json_success( array( 'status' => 'idle' ) );
+	}
+
+	/**
+	 * Returns the dashboard results region rendered for a dashboard URL query.
+	 */
+	public static function results() {
+		self::authorize();
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verified in authorize(); each argument is whitelisted and sanitized in render_results().
+		$query = isset( $_POST['query'] ) ? (string) wp_unslash( $_POST['query'] ) : '';
+		wp_send_json_success( Admin::render_results( ltrim( $query, '?' ) ) );
 	}
 
 	/**

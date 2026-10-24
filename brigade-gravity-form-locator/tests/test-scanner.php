@@ -198,7 +198,7 @@ final class Scanner_Tests {
 
 		$steps = 0;
 		do {
-			$state = Scanner::step( 0.01 );
+			$state = Scanner::step( 0 );
 			++$steps;
 		} while ( is_array( $state ) && Scanner::STATUS_RUNNING === $state['status'] && $steps < 200 );
 
@@ -316,7 +316,7 @@ final class Scanner_Tests {
 			)
 		);
 		$state = Scanner::start();
-		Scanner::step( 0.01 );
+		Scanner::step( 0 );
 
 		T::same( $committed, Results_Repository::active_scan_id(), 'active scan unchanged while a new scan runs' );
 		T::same( $before, Results_Repository::query( array( 'per_page' => 0 ) )['total'], 'dashboard still shows the previous results' );
@@ -338,7 +338,7 @@ final class Scanner_Tests {
 		// Cancel leaves results intact.
 		$committed = Results_Repository::active_scan_id();
 		Scanner::start();
-		Scanner::step( 0.01 );
+		Scanner::step( 0 );
 		Scanner::cancel();
 		T::same( $committed, Results_Repository::active_scan_id(), 'cancelled scan does not replace results' );
 		T::ok( Results_Repository::query( array( 'per_page' => 0 ) )['total'] > 0, 'results still visible after cancel' );
@@ -353,11 +353,11 @@ final class Scanner_Tests {
 		self::setup();
 		Scanner::start();
 		add_option( Scanner::STEP_LOCK_OPTION, (string) time(), '', false );
-		$result = Scanner::step( 0.01 );
+		$result = Scanner::step( 0 );
 		T::ok( is_wp_error( $result ) && 'bgfl_scan_busy' === $result->get_error_code(), 'a held lock blocks a second step' );
 
 		update_option( Scanner::STEP_LOCK_OPTION, (string) ( time() - Scanner::LOCK_TTL - 5 ), false );
-		T::ok( is_array( Scanner::step( 0.01 ) ), 'an abandoned lock is taken over' );
+		T::ok( is_array( Scanner::step( 0 ) ), 'an abandoned lock is taken over' );
 		T::same( false, get_option( Scanner::STEP_LOCK_OPTION ), 'lock released after the step' );
 		Scanner::cancel();
 		self::teardown();
@@ -419,5 +419,42 @@ final class Scanner_Tests {
 		T::same( $before, self::fingerprint(), 'content untouched by reset' );
 		T::ok( is_array( get_option( Settings::OPTION ) ), 'settings kept' );
 		self::teardown();
+	}
+
+	/**
+	 * Saving settings that equal the stored value's defaults must not lose post types or
+	 * detectors when WordPress sanitizes the value a second time.
+	 */
+	public static function test_settings_sanitize_is_idempotent() {
+		$saved = get_option( Settings::OPTION );
+		Admin::register_settings();
+
+		$posted = array(
+			'schedule_enabled'   => '1',
+			'schedule_frequency' => 'daily',
+			'post_types'         => array( 'page' ),
+			'statuses'           => array( 'publish', 'draft' ),
+			'detectors'          => array( 'gutenberg', 'classic', 'elementor' ),
+			'scan_templates'     => '1',
+			'history_limit'      => '5',
+			'batch_size'         => '30',
+		);
+		$once   = Settings::sanitize( $posted );
+		$twice  = Settings::sanitize( $once );
+		T::same( $once, $twice, 'sanitizing a sanitized value changes nothing' );
+		T::ok( in_array( 'post', $once['excluded_post_types'], true ) && ! in_array( 'page', $once['excluded_post_types'], true ), 'post type selection kept' );
+		T::ok( ! in_array( 'elementor', $once['disabled_detectors'], true ) && in_array( 'divi', $once['disabled_detectors'], true ), 'detector selection kept' );
+
+		// The real save path, starting from stored defaults.
+		update_option( Settings::OPTION, Settings::defaults() );
+		update_option( Settings::OPTION, $posted );
+		Settings::flush();
+		$stored = Settings::get();
+		T::same( $once['excluded_post_types'], $stored['excluded_post_types'], 'saved post types survive update_option()' );
+		T::same( $once['disabled_detectors'], $stored['disabled_detectors'], 'saved detectors survive update_option()' );
+
+		update_option( Settings::OPTION, $saved );
+		Settings::flush();
+		Cron::clear();
 	}
 }

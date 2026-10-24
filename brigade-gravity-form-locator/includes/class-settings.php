@@ -169,6 +169,15 @@ class Settings {
 		$defaults = self::defaults();
 		$clean    = array();
 
+		// WordPress can run this callback again on an already-sanitized value (update_option()
+		// falls back to add_option(), which sanitizes once more), so accept the stored shape too.
+		if ( ! isset( $input['post_types'] ) && isset( $input['excluded_post_types'] ) ) {
+			$input['post_types'] = array_diff( array_keys( self::content_post_types() ), (array) $input['excluded_post_types'] );
+		}
+		if ( ! isset( $input['detectors'] ) && isset( $input['disabled_detectors'] ) ) {
+			$input['detectors'] = array_diff( array_keys( Detector_Registry::all() ), (array) $input['disabled_detectors'] );
+		}
+
 		$clean['schedule_enabled']   = ! empty( $input['schedule_enabled'] );
 		$clean['schedule_frequency'] = isset( $input['schedule_frequency'] ) && in_array( $input['schedule_frequency'], array( 'daily', 'weekly' ), true )
 			? $input['schedule_frequency']
